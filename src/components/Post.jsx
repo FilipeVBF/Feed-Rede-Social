@@ -1,29 +1,49 @@
+import { format, formatDistanceToNow } from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR'
+
+import { Avatar } from './Avatar';
+import { Comment } from './Comment';
+
 import styles from './Post.module.css';
 
-export function Post() {
+export function Post({ author, publishedAt, content}) {
+  const publishedDateFormatted = format(publishedAt, "d 'de' LLLL 'às' HH:mm'h'", {
+    locale: ptBR,
+  })
+
+  const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {
+    locale: ptBR,
+    addSuffix: true,
+  })
+
   return (
     <article className={styles.post}>
       <header>
 
         <div className={styles.author}>
-          <img src="https://tse4.mm.bing.net/th/id/OIG3.W31wnCL197Wh0uhg5cYY?pid=ImgGn" />
+          <Avatar src={author.avatarUrl} />         
           <div className={styles.authorInfo}>
-            <strong>Diego Fernandes</strong>
-            <span>Web Developer</span>
+            <strong>{author.name}</strong>
+            <span>{author.role}</span>
           </div>
         </div>
-        <time title='26 de Maio às 13:20' dateTime="2024/05/26 13:20:30">Publicado há 1h</time>
+        <time title={publishedDateFormatted} dateTime={publishedAt.toISOString()}>{publishedDateRelativeToNow}</time>
 
       </header>
 
       <div className={styles.content}>
-
-        <p>Fala galeraa 👋</p>
-        <p>Acabei de subir mais um projeto no meu portifa. É um projeto que fiz no NLW Return, evento da Rocketseat. O nome do projeto é DoctorCare 🚀</p>
-        <p>👉 <a href=''>jane.design/doctorcare</a></p>
-        <p><a href=''>#novoprojeto </a>
-        <a href=''>#nlw </a>
-        <a href=''>#rocketseat</a>
+        {content.map(line => {
+          if (line.type === 'paragraph') {
+            return <p>{line.content}</p>
+          } else if (line.type === 'link') {
+            return <p>{line.emoji}<a href="">{line.content}</a></p>
+          }
+        })}
+        
+        <p>
+          <a href=''>#novoprojeto </a>
+          <a href=''>#nlw </a>
+          <a href=''>#rocketseat</a>
         </p>
 
       </div>
@@ -38,6 +58,29 @@ export function Post() {
           <button type='submit'>Publicar</button>
         </footer>
       </form>
+
+      <div className={styles.commentList}>
+        <Comment 
+          src='https://tse2.mm.bing.net/th/id/OIG4.yGTLXsHgaKW37ynPSnZM?pid=ImgGn'
+          content='Muito bom Devon, parabéns!! 👏👏'
+          applaud='20'
+        />
+        <Comment 
+          src='https://tse1.mm.bing.net/th/id/OIG1.SkN4YzDnyHhTtAo6XOmb?pid=ImgGn'
+          content='Maravilhoso Devon, parabéns!! 👏👏'
+          applaud='50'
+        />
+        <Comment 
+           src='https://tse1.mm.bing.net/th/id/OIG2.a3N4sbGFfFJQ1Ga0inSk?pid=ImgGn'
+           content='Ficou excelente Devon, parabéns!! 👏👏'
+           applaud='10'
+        />
+        <Comment 
+           src='https://tse2.mm.bing.net/th/id/OIG4.bLwzM0SDUxXuOMJGWsqO?pid=ImgGn'
+           content='Ficou show Devon, parabéns!! 👏👏'
+           applaud='20'
+        />
+      </div>
     </article>
   )
 }
