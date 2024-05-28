@@ -1,11 +1,20 @@
 import { ThumbsUp, Trash } from 'phosphor-react'
 import { Avatar } from './Avatar'
 import styles from './Comment.module.css'
+import { useState } from 'react'
 
-export function Comment (props) {
+export function Comment ({ content, src, applaud, onDeleteComment }) {
+  const [likeCount, setLikeCount] = useState(applaud)
+
+  const handleDeleteComment = () => {
+    onDeleteComment(content)
+  }
+  const handleLikeComment = () => {
+    setLikeCount((state) => parseInt(state) + 1)
+  }
   return (
     <div className={styles.comment}>
-      <Avatar hasBorder={false} src={props.src} />
+      <Avatar hasBorder={false} src={src} />
       
       <div className={styles.commentBox}>
         <div className={styles.commentContent}>
@@ -13,23 +22,19 @@ export function Comment (props) {
             <div className={styles.authorAndTime}>
               <time title='26 de Maio às 14:35' dateTime="2024/05/26 14:35:40">Cerca de 1h atrás</time>
             </div>
-            <button title='Deletar comentário'>
+            <button onClick={handleDeleteComment} title='Deletar comentário'>
               <Trash size={24} />
             </button>
           </header>
-          <p>{props.content}</p>
+          <p>{content}</p>
         </div>
         <footer>
-          <button>
+          <button onClick={handleLikeComment}>
             <ThumbsUp /> 
-            Aplaudir <span>{props.applaud}</span>
+            Aplaudir <span>{likeCount}</span>
           </button>
         </footer>
       </div>
     </div>
   )
 }
-
-{/* <img src="https://tse2.mm.bing.net/th/id/OIG4.bLwzM0SDUxXuOMJGWsqO?pid=ImgGn" />
-<img src="https://tse1.mm.bing.net/th/id/OIG1.SkN4YzDnyHhTtAo6XOmb?pid=ImgGn" />
-<img src="https://tse1.mm.bing.net/th/id/OIG2.a3N4sbGFfFJQ1Ga0inSk?pid=ImgGn" /> */}
